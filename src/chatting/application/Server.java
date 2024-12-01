@@ -1,174 +1,201 @@
 package chatting.application;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import java.text.*;
 import java.net.*;
 import java.io.*;
+import java.text.*;
+import java.util.*;
 
-public class Server implements ActionListener{
+public class Server implements ActionListener {
     JTextField text;
-    JPanel a1;
-    static Box vertical=Box.createVerticalBox();
-    static JFrame f = new JFrame();
+    static JPanel a1;
     static DataOutputStream dout;
-    Server(){
+    static DataInputStream din;
+    static JFrame f = new JFrame();
+    static JScrollPane scrollPane;
+
+    Server() {
         f.setLayout(null);
-        JPanel p1=new JPanel();
-        p1.setBackground(new Color(7,94,84));
-        p1.setBounds(0,0,450,70);
+
+        // Header Panel
+        JPanel p1 = new JPanel();
+        p1.setBackground(new Color(7, 94, 84));
+        p1.setBounds(0, 0, 450, 70);
         p1.setLayout(null);
         f.add(p1);
-        
-        ImageIcon i1=new ImageIcon(ClassLoader.getSystemResource("icons/3.png"));
-        Image i2=i1.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
-        ImageIcon i3= new ImageIcon(i2);
-        JLabel back= new JLabel(i3);
-        back.setBounds(5,20,25,25);
+
+        // Back Icon
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/3.png"));
+        Image i2 = i1.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
+        JLabel back = new JLabel(new ImageIcon(i2));
+        back.setBounds(5, 20, 25, 25);
         p1.add(back);
-        
-        back.addMouseListener(new MouseAdapter(){
-            public void mouseClicked(MouseEvent ae){
-            System.exit(0);
-        }
-    });
-        
-        ImageIcon i4=new ImageIcon(ClassLoader.getSystemResource("icons/1.png"));
-        Image i5=i4.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-        ImageIcon i6= new ImageIcon(i5);
-        JLabel profile= new JLabel(i6);
-        profile.setBounds(40,10,50,50);
+
+        back.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent ae) {
+                System.exit(0);
+            }
+        });
+
+        // Profile Picture
+        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/gaitonde.jpeg"));
+        Image i5 = i4.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+        JLabel profile = new JLabel(new ImageIcon(i5));
+        profile.setBounds(40, 10, 50, 50);
+        profile.setBorder(new LineBorder(Color.WHITE, 2, true));
         p1.add(profile);
-        
-        ImageIcon i7=new ImageIcon(ClassLoader.getSystemResource("icons/video.png"));
-        Image i8=i7.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
-        ImageIcon i9= new ImageIcon(i8);
-        JLabel video= new JLabel(i9);
-        video.setBounds(300,20,30,30);
-        p1.add(video);
-        
-        ImageIcon i10=new ImageIcon(ClassLoader.getSystemResource("icons/phone.png"));
-        Image i11=i10.getImage().getScaledInstance(35, 30, Image.SCALE_DEFAULT);
-        ImageIcon i12= new ImageIcon(i11);
-        JLabel phone= new JLabel(i12);
-        phone.setBounds(360,20,35,30);
-        p1.add(phone);
-        
-        ImageIcon i13=new ImageIcon(ClassLoader.getSystemResource("icons/3icon.png"));
-        Image i14=i13.getImage().getScaledInstance(10, 25, Image.SCALE_DEFAULT);
-        ImageIcon i15= new ImageIcon(i14);
-        JLabel morevert= new JLabel(i15);
-        morevert.setBounds(420,20,10,25);
-        p1.add(morevert);
-        
-        JLabel name=new JLabel("Gaitonde");
-        name.setBounds(110,15,100,18);
+
+        // Contact Name and Status
+        JLabel name = new JLabel("Person 1");
+        name.setBounds(110, 15, 100, 18);
         name.setForeground(Color.WHITE);
-        name.setFont(new Font("SAN_SERIF", Font.BOLD,18));
+        name.setFont(new Font("SAN_SERIF", Font.BOLD, 18));
         p1.add(name);
-        
-        JLabel status=new JLabel("Active Now");
-        status.setBounds(110,35,100,18);
+
+        JLabel status = new JLabel("Active Now");
+        status.setBounds(110, 35, 100, 18);
         status.setForeground(Color.WHITE);
-        status.setFont(new Font("SAN_SERIF", Font.BOLD,14));
+        status.setFont(new Font("SAN_SERIF", Font.PLAIN, 14));
         p1.add(status);
-        
-        a1=new JPanel();
-        a1.setBounds(5,75,440,570);
-        f.add(a1);
-        
-        text=new JTextField();
-        text.setBounds(5,655,310,40);
-        text.setFont(new Font("SAN_SERIF", Font.BOLD,16));
+
+        // Video Call Button
+        ImageIcon videoIcon = new ImageIcon(ClassLoader.getSystemResource("icons/video.png"));
+        Image videoImg = videoIcon.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
+        JLabel videoCall = new JLabel(new ImageIcon(videoImg));
+        videoCall.setBounds(300, 20, 30, 30); // Adjust the bounds to align and set the size
+        p1.add(videoCall);
+
+        // Voice Call Button
+        ImageIcon voiceIcon = new ImageIcon(ClassLoader.getSystemResource("icons/phone.png"));
+        Image voiceImg = voiceIcon.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
+        JLabel voiceCall = new JLabel(new ImageIcon(voiceImg));
+        voiceCall.setBounds(350, 20, 30, 30); // Adjust the bounds to align and set the size
+        p1.add(voiceCall);
+
+        // More Options Button
+        ImageIcon moreIcon = new ImageIcon(ClassLoader.getSystemResource("icons/3icon.png"));
+        Image moreImg = moreIcon.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
+        JLabel moreOptions = new JLabel(new ImageIcon(moreImg));
+        moreOptions.setBounds(400, 20, 30, 30); // Adjust the bounds to align and set the size
+        p1.add(moreOptions);
+
+        // Chat Area
+        a1 = new JPanel();
+        a1.setLayout(new BoxLayout(a1, BoxLayout.Y_AXIS));
+        a1.setBackground(new Color(236, 229, 221));
+
+        scrollPane = new JScrollPane(a1);
+        scrollPane.setBounds(5, 75, 440, 470);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        f.add(scrollPane);
+
+        // Input Field
+        text = new JTextField();
+        text.setBounds(5, 550, 310, 40);
+        text.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
+        text.setBorder(new LineBorder(new Color(7, 94, 84), 1, true));
+        text.setBackground(Color.WHITE);
         f.add(text);
-        
-        JButton send=new JButton("Send");
-        send.setBounds(320, 655, 123, 40);
-        send.setBackground(new Color(7,94,84));
+
+        JButton send = new JButton("Send");
+        send.setBounds(320, 550, 123, 40);
+        send.setBackground(new Color(7, 94, 84));
         send.setForeground(Color.WHITE);
+        send.setFont(new Font("SAN_SERIF", Font.BOLD, 16));
         send.addActionListener(this);
-        send.setFont(new Font("SAN_SERIF", Font.BOLD,16));
         f.add(send);
-                
-        f.setSize(450,700);
-        f.setLocation(200,50);
+
+        f.setSize(450, 600);
+        f.setLocation(200, 30);
         f.setUndecorated(true);
         f.getContentPane().setBackground(Color.WHITE);
-        
+
         f.setVisible(true);
-}
-    public void actionPerformed(ActionEvent ae){
-        try{
-        String out=text.getText();
-        
-        JPanel p2=formatLabel(out);
-        a1.setLayout(new BorderLayout());
-        
-        JPanel right=new JPanel(new BorderLayout());
-        right.add(p2,BorderLayout.LINE_END);
-        vertical.add(right);
-        vertical.add(Box.createVerticalStrut(15));
-        
-        a1.add(vertical, BorderLayout.PAGE_START);
-        
-        dout.writeUTF(out);
-        text.setText("");
-        
-        f.repaint();
-        f.invalidate();
-        f.validate();
-        }catch(Exception e){
+
+        startServer();
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        try {
+            String out = text.getText().trim();
+            if (!out.isEmpty()) {
+                JPanel p2 = formatLabel(out);
+
+                JPanel right = new JPanel(new BorderLayout());
+                right.add(p2, BorderLayout.LINE_END);
+
+                a1.add(right);
+                a1.add(Box.createVerticalStrut(15));
+
+                text.setText("");
+
+                dout.writeUTF(out);
+
+                f.repaint();
+                f.invalidate();
+                f.validate();
+
+                scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static JPanel formatLabel(String out){
-        JPanel panel=new JPanel();
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-        
-        JLabel output=new JLabel("<html><p style=\"width:150px\">"+out+"</p></html>");
-        output.setFont(new Font("Tahoma",Font.PLAIN,16));
-        output.setBackground(new Color(37,211,102));
+
+    public static JPanel formatLabel(String out) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel output = new JLabel("<html><p style=\"width:200px\">" + out + "</p></html>");
+        output.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        output.setBackground(new Color(220, 248, 198));
         output.setOpaque(true);
-        output.setBorder(new EmptyBorder(15,15,15,50));
-        
+        output.setBorder(new EmptyBorder(10, 15, 10, 50));
         panel.add(output);
-        
-        Calendar cal=Calendar.getInstance();
-        SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
-        
-        JLabel time=new JLabel();
-        time.setText(sdf.format(cal.getTime()));
+
+        JLabel time = new JLabel(new SimpleDateFormat("HH:mm").format(new Date()));
+        time.setFont(new Font("SAN_SERIF", Font.PLAIN, 12));
+        time.setForeground(Color.GRAY);
         panel.add(time);
-        
+
         return panel;
     }
-    
-    public static void main(String[] args){
-        new Server();
-        
-        try{
-            ServerSocket skt=new ServerSocket(6001);
-            while(true){
-                Socket s=skt.accept();
-                DataInputStream din=new DataInputStream(s.getInputStream());
-                dout=new DataOutputStream(s.getOutputStream());
-                
-                while(true){
-                    String msg=din.readUTF();
-                    JPanel panel=formatLabel(msg);
-                    
-                    JPanel left=new JPanel(new BorderLayout());
-                    left.add(panel,BorderLayout.LINE_START);
-                    vertical.add(left);
-                    
+
+    private void startServer() {
+        new Thread(() -> {
+            try {
+                ServerSocket serverSocket = new ServerSocket(6001);
+                System.out.println("Server started...");
+                Socket socket = serverSocket.accept();
+                System.out.println("Client connected...");
+
+                din = new DataInputStream(socket.getInputStream());
+                dout = new DataOutputStream(socket.getOutputStream());
+
+                while (true) {
+                    String msg = din.readUTF();
+                    JPanel panel = formatLabel(msg);
+
+                    JPanel left = new JPanel(new BorderLayout());
+                    left.add(panel, BorderLayout.LINE_START);
+
+                    a1.add(left);
+                    a1.add(Box.createVerticalStrut(15));
+
                     f.validate();
+                    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }catch(Exception e){
-            e.printStackTrace();
-            
-        }
+        }).start();
+    }
+
+    public static void main(String[] args) {
+        new Server();
     }
 }
