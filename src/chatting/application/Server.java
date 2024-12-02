@@ -41,7 +41,7 @@ public class Server implements ActionListener {
         });
 
         // Profile Picture
-        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/gaitonde.jpeg"));
+        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/4.jpg"));
         Image i5 = i4.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
         JLabel profile = new JLabel(new ImageIcon(i5));
         profile.setBounds(40, 10, 50, 50);
@@ -49,7 +49,7 @@ public class Server implements ActionListener {
         p1.add(profile);
 
         // Contact Name and Status
-        JLabel name = new JLabel("Person 1");
+        JLabel name = new JLabel("Chirag");
         name.setBounds(110, 15, 100, 18);
         name.setForeground(Color.WHITE);
         name.setFont(new Font("SAN_SERIF", Font.BOLD, 18));
